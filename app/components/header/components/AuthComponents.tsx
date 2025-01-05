@@ -1,10 +1,10 @@
 import { signIn, signOut } from "@/auth"
-import { redirect } from 'next/navigation';
+import Link from "next/link";
 
 export function SignIn({
     provider,
     className,
-}: { provider?: string , className?: string}) {
+}: { provider?: string, className?: string }) {
     return (
         <form
             action={async () => {
@@ -19,7 +19,7 @@ export function SignIn({
 
 export function SignOut({
     className,
-}:{
+}: {
     className?: string
 }) {
     return (
@@ -30,7 +30,7 @@ export function SignOut({
             }}
             className="w-full"
         >
-            <button  className={className}>
+            <button className={className}>
                 Sign Out
             </button>
         </form>
@@ -40,20 +40,13 @@ export function SignOut({
 
 const SignUp = ({
     className,
-}:{
+}: {
     className?: string
 }) => {
     return (
-        <form
-            action={async () => {
-                "use server"
-                redirect('/sign-up')
-            }}
-        >
-            <button  className={className}>
-                Sign Up
-            </button>
-        </form>
+        <Link href={'/sign-up'} className={className}>
+            Sign Up
+        </Link>
     )
 }
 

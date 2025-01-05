@@ -1,10 +1,6 @@
 import Image from "next/image";
 
 export default function Home() {
-  if (typeof window !== 'undefined') {
-    console.log(Math.random());
-  }
-
   return (
     <div 
       className="

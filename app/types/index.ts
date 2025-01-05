@@ -3,4 +3,5 @@ export interface UserRegistrationForm {
     password: string;
     image: string;
     confirmPassword: string;
+    terms: boolean;
 }

@@ -5,7 +5,7 @@ import { userRegistrationSchema } from "@/app/validations/auth/schema-sign-up";
 import { db } from "@/lib/db";
 import bcrypt from "bcrypt";
 
-export const signUp = async (data: UserRegistrationForm) => {
+export const signUp = async (data: UserRegistrationForm): Promise<{ success: boolean, message?: string }> => {
     try {
         await userRegistrationSchema.validateAsync(data);
 
@@ -33,8 +33,8 @@ export const signUp = async (data: UserRegistrationForm) => {
             },
         })
 
-        return { success: true };
-    } catch (error: any) {
+        return { success: true, message: "Registration successful" };
+    } catch (error:any) {
         return { success: false, message: error.message || "Registration failed" };
     }
 };

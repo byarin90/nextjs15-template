@@ -10,11 +10,11 @@ import { useRouter } from "next/navigation";
 
 
 export default function RegisterForm() {
-    // react-hook-form setup
+    
     const {
         register,
         handleSubmit,
-        formState: { errors, isSubmitting },
+        formState: { errors },
     } = useForm<UserRegistrationForm>({
         resolver: joiResolver(userRegistrationSchema),
     });
@@ -36,7 +36,7 @@ export default function RegisterForm() {
             } else {
                 console.error("Registration error:", response.message);
                 console.log(response.message);
-                setError(response.message);
+                setError(response.message as string);
             }
         } catch (error) {
             setError("Something went wrong. Please try again later.");
@@ -45,152 +45,85 @@ export default function RegisterForm() {
         }
     };
     return (
-        <div
-            className="
-        max-w-xl
-        mx-auto 
-        mt-10 
-        bg-colors-primary 
-        text-colors-secondary 
-        p-6 
-        rounded-md 
-        border 
-        border-colors-secondary/10
-      "
-        >
-            <h2 className="text-xl font-bold mb-4">Register</h2>
 
-            <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col space-y-4">
-                <div className="flex flex-col">
-                    <label htmlFor="email" className="mb-1 font-semibold">
-                        Email
-                    </label>
-                    <input
-                        id="email"
-                        type="email"
-                        className="
-                        px-3 py-2 
-                        bg-colors-primary 
-                        text-colors-secondary 
-                        border border-colors-secondary/20 
-                        rounded-md 
-                        focus:outline-none 
-                        focus:ring-2 
-                        focus:ring-colors-accent 
-                        transition-colors
-                      "
-                        {...register("email")}
-                    />
-                    {errors.email && (
-                        <p className="text-sm text-colors-error mt-1">
-                            {errors.email.message}
-                        </p>
-                    )}
-                </div>
-
-                <div className="flex flex-col">
-                    <label htmlFor="image" className="mb-1 font-semibold">
-                        Image URL
-                    </label>
-                    <input
-                        id="image"
-                        type="text"
-                        className="
-              px-3 py-2 
-              bg-colors-primary 
-              text-colors-secondary 
-              border border-colors-secondary/20 
-              rounded-md 
-              focus:outline-none 
-              focus:ring-2 
-              focus:ring-colors-accent 
-              transition-colors
-            "
-                        {...register("image")}
-                    />
-                    {errors.image && (
-                        <p className="text-sm text-colors-error mt-1">
-                            {errors.image.message}
-                        </p>
-                    )}
-                </div>
-                <div className="flex flex-col">
-                    <label htmlFor="password" className="mb-1 font-semibold">
-                        Password
-                    </label>
-                    <input
-                        id="password"
-                        type="password"
-                        className="
-              px-3 py-2 
-              bg-colors-primary 
-              text-colors-secondary 
-              border border-colors-secondary/20 
-              rounded-md 
-              focus:outline-none 
-              focus:ring-2 
-              focus:ring-colors-accent 
-              transition-colors
-            "
-                        {...register("password")}
-                    />
-                    {errors.password && (
-                        <p className="text-sm text-colors-error mt-1">
-                            {errors.password.message}
-                        </p>
-                    )}
-                </div>
-
-                <div className="flex flex-col">
-                    <label htmlFor="confirmPassword" className="mb-1 font-semibold">
-                        Confirm Password
-                    </label>
-                    <input
-                        id="confirmPassword"
-                        type="password"
-                        className="
-              px-3 py-2 
-              bg-colors-primary 
-              text-colors-secondary 
-              border border-colors-secondary/20 
-              rounded-md 
-              focus:outline-none 
-              focus:ring-2 
-              focus:ring-colors-accent 
-              transition-colors
-            "
-                        {...register("confirmPassword")}
-                    />
-                    {errors.confirmPassword && (
-                        <p className="text-sm text-colors-error mt-1">
-                            {errors.confirmPassword.message}
-                        </p>
-                    )}
-                </div>
-
-                {error && (
-                    <p className="text-sm text-colors-error mt-1">{error}</p>
+        <form onSubmit={handleSubmit(onSubmit)} className="space-y-4 md:space-y-6" action="#">
+            <div>
+                <label className="block mb-2 text-sm font-medium text-primary">Your email</label>
+                <input {...register("email")} type="email" name="email" id="email" className="bg-primary border border-gray-300 text-primary text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="name@company.com" />
+                {errors.email && (
+                    <p className="text-sm text-colors-error mt-1">
+                        {errors.email.message}
+                    </p>
                 )}
+            </div>
+            <div>
+                <label className="block mb-2 text-sm font-medium text-primary">Image URL</label>
+                <input {...register('image')} type="text" name="image" id="image" placeholder="http://image-url.ai.com" className="bg-gray-50 border border-gray-300 text-primary text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:focus:ring-blue-500 dark:focus:border-blue-500" />
+                {errors.image && (
+                    <p className="text-sm text-colors-error mt-1">
+                        {errors.image.message}
+                    </p>
+                )}
+            </div>
+            <div>
+                <label className="block mb-2 text-sm font-medium text-primary">Password</label>
+                <input {...register('password')} type="password" name="password" id="password" placeholder="••••••••" className="bg-gray-50 border border-gray-300 text-primary text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:focus:ring-blue-500 dark:focus:border-blue-500" />
+                {errors.password && (
+                    <p className="text-sm text-colors-error mt-1">
+                        {errors.password.message}
+                    </p>
+                )}
+            </div>
+            <div>
+                <label className="block mb-2 text-sm font-medium text-primary">Confirm password</label>
+                <input {...register('confirmPassword')} type="password" name="confirmPassword" id="confirmPassword" placeholder="••••••••" className="bg-gray-50 border border-gray-300 text-primary text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:focus:ring-blue-500 dark:focus:border-blue-500" />
+                {errors.confirmPassword && (
+                    <p className="text-sm text-colors-error mt-1">
+                        {errors.confirmPassword.message}
+                    </p>
+                )}
+            </div>
+            <div className="flex items-start">
+                <div className="flex items-center h-5">
+                    <input
+                        id="terms"
+                        type="checkbox"
+                        {...register("terms")}
+                        className="w-4 h-4 border border-gray-300 rounded bg-gray-50
+                 focus:ring-3 focus:ring-primary-300
+                 dark:bg-gray-700 dark:border-gray-600
+                 dark:focus:ring-primary-600 dark:ring-offset-gray-800"
+                    />
+                </div>
+                <div className="ml-3 text-sm">
+                    <label
+                        htmlFor="terms"
+                        className="font-light text-gray-500 dark:text-gray-300"
+                    >
+                        I accept the{" "}
+                        <a
+                            className="font-medium text-primary-600 hover:underline dark:text-primary-500"
+                            href="#"
+                        >
+                            Terms and Conditions
+                        </a>
+                    </label>
+                </div>
+            </div>
+            {errors.terms && (
+                <p className="text-sm text-colors-error mt-1">
+                    {errors.terms.message}
+                </p>
+            )}
+            {error && (
+                <p className="text-sm text-colors-error mt-1">
+                    {error}
+                </p>
+            )}
+            <button type="submit" className="w-full text-colors-secondary dark:text-white text-slate-800 dark:bg-slate-800 bg-slate-300 py-2.5 px-4 text-sm font-medium text-primary rounded-lg hover:bg-slate-400 dark:hover:bg-slate-700 transition-colors   
+                                ">Create an account</button>
+      
+        </form>
 
-                <button
-                    type="submit"
-                    disabled={isSubmitting}
-                    className="
-            mt-2 
-            bg-colors-accent
-            text-colors-primary
-            dark:bg-colors-secondary 
-            dark:text-black 
-            rounded-md 
-            py-2 
-            hover:bg-colors-accent/90 
-            transition-colors
-            disabled:bg-colors-secondary/40
-          "
-                >
-                    {isSubmitting ? "Submitting..." : "Register"}
-                </button>
-            </form>
-        </div>
     );
 }

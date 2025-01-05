@@ -10,7 +10,6 @@ import { auth } from "@/auth";
 const Header = async () => {
     const session = await auth();
     console.log(session);
-
     return (
         <header
             className="
@@ -38,7 +37,7 @@ transition"
                         {/* תפריט */}
                         <nav className="hidden md:flex items-center space-x-4">
                             <Link
-                                href="#"
+                                href="/"
                                 className="
                                   hover:text-colors-accent 
                                   transition
@@ -50,9 +49,7 @@ transition"
                             <DropDown
                                 label="Services"
                                 items={[
-                                    { href: "#", label: "Service 1" },
-                                    { href: "#", label: "Service 2" },
-                                    { href: "#", label: "Service 3" },
+                                    { href: "/todos", label: "Todos" },
                                 ]}
                             />
                         </nav>

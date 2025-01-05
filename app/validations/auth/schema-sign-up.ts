@@ -18,4 +18,8 @@ export const userRegistrationSchema = Joi.object({
     "any.only": "Passwords do not match",
     "any.required": "Please confirm your password",
   }),
+  terms: Joi.boolean().valid(true).required().messages({
+    "any.only": "You must accept the Terms and Conditions",
+    "any.required": "You must accept the Terms and Conditions",
+  }),
 });
