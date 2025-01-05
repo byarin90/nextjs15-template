@@ -5,37 +5,30 @@
 
 
 :root {
-  /* Light Mode Colors */
-  --color-primary: #f2f2f2;      /* צבע רקע / אלמנטים עיקריים */
-  --color-secondary: #232323;    /* צבע טקסט / אלמנטים משניים */
-  --color-accent: #6366f1;       /* צבע "Accent" / כפתורים מרכזיים */
-  --color-success: #22c55e;      /* הצלחה (Success) */
-  --color-warning: #eab308;      /* התרעה (Warning) */
-  --color-error: #ef4444;        /* שגיאה (Error) */
-  --color-info: #0ea5e9;         /* מידע (Info) */
+  --color-primary: #f2f2f2;      
+  --color-secondary: #232323;   
+  --color-accent: #6366f1;    
+  --color-success: #22c55e;     
+  --color-warning: #eab308; 
+  --color-error: #ef4444;        
+  --color-info: #0ea5e9;       
 }
 
 [class="dark"] {
-  /* Dark Mode Colors */
-  --color-primary: #18181b;      /* צבע רקע / אלמנטים עיקריים */
-  --color-secondary: #e5e7eb;    /* צבע טקסט / אלמנטים משניים */
-  --color-accent: #8b5cf6;       /* צבע "Accent" / כפתורים מרכזיים */
-  --color-success: #22c55e;      /* הצלחה (Success) */
-  --color-warning: #f59e0b;      /* התרעה (Warning) */
-  --color-error: #ef4444;        /* שגיאה (Error) */
-  --color-info: #38bdf8;         /* מידע (Info) */
+  --color-primary: #18181b;     
+  --color-secondary: #e5e7eb;    
+  --color-accent: #8b5cf6;      
+  --color-success: #22c55e;     
+  --color-warning: #f59e0b;      
+  --color-error: #ef4444;     
+  --color-info: #38bdf8;        
 }
 body {
   font-family: Arial, Helvetica, sans-serif;
 }
 
-/* Example to create class of tailwindcss classes */
 @layer components {
-  .btn-custom {
-    @apply bg-blue-500 text-white font-bold py-3 px-9 rounded-[30px] border-gray-200 border-[2px];
-  }
-
   .transition {
-    @apply transition-colors duration-300;
+    @apply transition-colors duration-300 ease-in-out;
   }
 }

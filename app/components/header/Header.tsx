@@ -63,6 +63,7 @@ transition"
                         {!session?.user ? (
                             <>
                                 <SignIn
+                                
                                     className="
                                       hidden sm:block 
                                       px-4 py-2 
@@ -84,7 +85,6 @@ transition"
                                       hover:bg-black/70
                                       transition
                                       dark:hover:bg-white/70
-
                                       "
                                 />
                             </>

@@ -47,10 +47,13 @@ export default function Home() {
               border border-solid border-colors-secondary/20 
               transition-colors 
               flex items-center justify-center
-              bg-colors-accent 
               text-white
+              dark:hover:text-colors-secondary
               gap-2 
-              hover:bg-colors-accent/90
+              hover:bg-black/70
+              dark:hover:bg-black/10
+              bg-colors-secondary
+              dark:text-colors-primary
               text-sm sm:text-base 
               h-10 sm:h-12 px-4 sm:px-5
             "
