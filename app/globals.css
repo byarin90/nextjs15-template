@@ -2,20 +2,40 @@
 @tailwind components;
 @tailwind utilities;
 
+
+
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  /* Light Mode Colors */
+  --color-primary: #f2f2f2;      /* צבע רקע / אלמנטים עיקריים */
+  --color-secondary: #232323;    /* צבע טקסט / אלמנטים משניים */
+  --color-accent: #6366f1;       /* צבע "Accent" / כפתורים מרכזיים */
+  --color-success: #22c55e;      /* הצלחה (Success) */
+  --color-warning: #eab308;      /* התרעה (Warning) */
+  --color-error: #ef4444;        /* שגיאה (Error) */
+  --color-info: #0ea5e9;         /* מידע (Info) */
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+[class="dark"] {
+  /* Dark Mode Colors */
+  --color-primary: #18181b;      /* צבע רקע / אלמנטים עיקריים */
+  --color-secondary: #e5e7eb;    /* צבע טקסט / אלמנטים משניים */
+  --color-accent: #8b5cf6;       /* צבע "Accent" / כפתורים מרכזיים */
+  --color-success: #22c55e;      /* הצלחה (Success) */
+  --color-warning: #f59e0b;      /* התרעה (Warning) */
+  --color-error: #ef4444;        /* שגיאה (Error) */
+  --color-info: #38bdf8;         /* מידע (Info) */
 }
-
 body {
-  color: var(--foreground);
-  background: var(--background);
   font-family: Arial, Helvetica, sans-serif;
+}
+
+/* Example to create class of tailwindcss classes */
+@layer components {
+  .btn-custom {
+    @apply bg-blue-500 text-white font-bold py-3 px-9 rounded-[30px] border-gray-200 border-[2px];
+  }
+
+  .transition {
+    @apply transition-colors duration-300;
+  }
 }
