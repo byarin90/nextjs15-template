@@ -9,8 +9,7 @@ import { useRouter } from "next/navigation";
 
 
 
-export default function RegisterForm() {
-    
+export default function AddTodo() {
     const {
         register,
         handleSubmit,

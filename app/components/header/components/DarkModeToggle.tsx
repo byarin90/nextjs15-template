@@ -2,17 +2,31 @@
 import { useEffect, useState } from 'react';
 import { SunIcon, MoonIcon } from '@heroicons/react/24/solid';
 
-
 const DarkModeToggle = () => {
+  const [mounted, setMounted] = useState(false);
   const [isDarkMode, setIsDarkMode] = useState(false);
+  
+  useEffect(() => {
+    setMounted(true);
+    const darkModePreference = localStorage.getItem('dark') === 'true';
+    setIsDarkMode(darkModePreference);
+  }, []);
 
   useEffect(() => {
+    if (!mounted) return;
+    
     if (isDarkMode) {
+      localStorage.setItem('dark', 'true');
       document.documentElement.classList.add('dark');
     } else {
+      localStorage.setItem('dark', 'false');
       document.documentElement.classList.remove('dark');
     }
-  }, [isDarkMode]);
+  }, [isDarkMode, mounted]);
+
+  if (!mounted) {
+    return null;
+  }
 
   return (
     <button

@@ -7,8 +7,10 @@ import SignUp, { SignIn, SignOut } from "./components/AuthComponents";
 import Link from "next/link";
 import { auth } from "@/auth";
 
+
 const Header = async () => {
     const session = await auth();
+
     console.log(session);
     return (
         <header
@@ -17,11 +19,17 @@ const Header = async () => {
             text-colors-secondary 
             shadow-lg 
             border-b 
-            border-colors-secondary/20
-transition"
+            border-colors-secondary
+            flex
+            h-[5rem]
+            items-center
+            justify-between
+            w-full
+            transition
+            "
         >
-            <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-                <div className="flex justify-between items-center h-16">
+            <div className=" mx-auto px-4 sm:px-6 lg:px-8 w-full">
+                <div className="flex justify-between   ">
                     <div className="flex items-center space-x-8">
                         <div className="flex-shrink-0 flex items-center space-x-2">
                             <Image
@@ -34,7 +42,7 @@ transition"
                             <span className="font-bold text-xl">TodoList</span>
                         </div>
 
-                        {/* תפריט */}
+
                         <nav className="hidden md:flex items-center space-x-4">
                             <Link
                                 href="/"
@@ -45,13 +53,15 @@ transition"
                             >
                                 Home
                             </Link>
+                            {session?.user && (
+                                <DropDown
+                                    label="Services"
+                                    items={[
+                                        { href: "/todos", label: "Todos" },
+                                    ]}
+                                />
 
-                            <DropDown
-                                label="Services"
-                                items={[
-                                    { href: "/todos", label: "Todos" },
-                                ]}
-                            />
+                            )}
                         </nav>
                     </div>
                     <div className="flex items-center space-x-4">
@@ -60,7 +70,7 @@ transition"
                         {!session?.user ? (
                             <>
                                 <SignIn
-                                
+
                                     className="
                                       hidden sm:block 
                                       px-4 py-2 
