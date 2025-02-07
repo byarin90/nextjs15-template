@@ -25,6 +25,7 @@ const Header = async () => {
             items-center
             justify-between
             w-full
+            py-4
             transition
             "
         >
