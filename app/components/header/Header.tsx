@@ -5,13 +5,13 @@ import todoLogo from "@/assets/todoLogo.png";
 import Avatar from "./components/Avatar";
 import SignUp, { SignIn, SignOut } from "./components/AuthComponents";
 import Link from "next/link";
-import { auth } from "@/auth";
+import SwitchLanguage from "./components/SwitchLanguage";
+import { useTranslations } from "next-intl";
 
 
-const Header = async () => {
-    const session = await auth();
+const Header =  ({ session }: { session: any}) => {
+    const t = useTranslations('Header')
 
-    console.log(session);
     return (
         <header
             className="
@@ -40,7 +40,7 @@ const Header = async () => {
                                 src={todoLogo}
                                 alt="Logo"
                             />
-                            <span className="font-bold text-xl">TodoList</span>
+                            <span className="font-bold text-xl">{t('TodoList')}</span>
                         </div>
 
 
@@ -66,6 +66,7 @@ const Header = async () => {
                         </nav>
                     </div>
                     <div className="flex items-center space-x-4">
+                        <SwitchLanguage/>
                         <DarkModeToggle />
 
                         {!session?.user ? (
