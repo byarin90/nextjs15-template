@@ -1,5 +1,5 @@
 "use client";
-import React, { useEffect } from "react";
+import React from "react";
 import { useForm } from "react-hook-form";
 import { joiResolver } from "@hookform/resolvers/joi";
 import { userRegistrationSchema } from "@/app/validations/auth/schema-sign-up";
@@ -18,13 +18,8 @@ export default function AddTodo() {
         resolver: joiResolver(userRegistrationSchema),
     });
     const [error, setError] = React.useState<string | null>(null);
-    const errorsKeys = Object.keys(errors);
     const router = useRouter();
-    useEffect(() => {
-        if (errorsKeys.length) {
-            setError(null);
-        }
-    }, [errorsKeys]);
+ 
 
     const onSubmit = async (data: UserRegistrationForm) => {
         try {
@@ -45,31 +40,31 @@ export default function AddTodo() {
             <div>
                 <label className="block mb-2 text-sm font-medium text-primary">Your email</label>
                 <input {...register("email")} type="email" name="email" id="email" className="bg-primary border border-gray-300 text-primary text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="name@company.com" />
-                    <p className="text-sm text-colors-error mt-1">
-                        {errors?.email?.message || ' '}
-                    </p>
-               
+                <p className="text-sm text-colors-error mt-1">
+                    {errors?.email?.message || ' '}
+                </p>
+
             </div>
             <div>
                 <label className="block mb-2 text-sm font-medium text-primary">Image URL</label>
                 <input {...register('image')} type="text" name="image" id="image" placeholder="http://image-url.ai.com" className="bg-gray-50 border border-gray-300 text-primary text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:focus:ring-blue-500 dark:focus:border-blue-500" />
-                    <p className="text-sm text-colors-error mt-1">
-                        {errors?.image?.message || ' '}
-                    </p>
+                <p className="text-sm text-colors-error mt-1">
+                    {errors?.image?.message || ' '}
+                </p>
             </div>
             <div>
                 <label className="block mb-2 text-sm font-medium text-primary">Password</label>
                 <input {...register('password')} type="password" name="password" id="password" placeholder="••••••••" className="bg-gray-50 border border-gray-300 text-primary text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:focus:ring-blue-500 dark:focus:border-blue-500" />
-                    <p className="text-sm text-colors-error mt-1">
-                        {errors?.password?.message || ' '}
-                    </p>
+                <p className="text-sm text-colors-error mt-1">
+                    {errors?.password?.message || ' '}
+                </p>
             </div>
             <div>
                 <label className="block mb-2 text-sm font-medium text-primary">Confirm password</label>
                 <input {...register('confirmPassword')} type="password" name="confirmPassword" id="confirmPassword" placeholder="••••••••" className="bg-gray-50 border border-gray-300 text-primary text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:focus:ring-blue-500 dark:focus:border-blue-500" />
-                    <p className="text-sm text-colors-error mt-1">
-                        {errors?.confirmPassword?.message || ' '}
-                    </p>
+                <p className="text-sm text-colors-error mt-1">
+                    {errors?.confirmPassword?.message || ' '}
+                </p>
             </div>
             <div className="flex items-start">
                 <div className="flex items-center h-5">
@@ -110,7 +105,7 @@ export default function AddTodo() {
             )}
             <button type="submit" className="w-full text-colors-secondary dark:text-white text-slate-800 dark:bg-slate-800 bg-slate-300 py-2.5 px-4 text-sm font-medium text-primary rounded-lg hover:bg-slate-400 dark:hover:bg-slate-700 transition-colors   
                                 ">Create an account</button>
-      
+
         </form>
 
     );
