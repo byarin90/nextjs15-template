@@ -1,5 +1,21 @@
 {
-    "Header":{
-        "TodoList":"רשימה"
-    }
+    "TodoList": "רשימת משימות",
+    "en": "אנגלית",
+    "he": "עברית",
+    "email": "אימייל",
+    "email_placeholder": "name@company.com",
+    "image_url": "כתובת תמונה",
+    "image_placeholder": "http://image-url.ai.com",
+    "password": "סיסמה",
+    "password_placeholder": "••••••••",
+    "confirm_password": "אימות סיסמה",
+    "terms_accept": "אני מקבל את",
+    "terms_and_conditions": "תנאי השימוש",
+    "sign_up": "הרשמה",
+    "error_something_wrong": "משהו השתבש. אנא נסה שוב מאוחר יותר.",
+    "add_todo": "הוסף משימה",
+    "todo_placeholder": "מה צריך לעשות?",
+    "submit": "שלח",
+    "sign_in": "התחברות",
+    "sign_out": "התנתקות"
 }

@@ -2,11 +2,13 @@
 
 import { useEffect, useState } from "react"
 import { useRouter } from "next/navigation"
+import { useTranslations } from "use-intl"
 
 const SwitchLanguage = () => {
 
     const [locale, setLocale] = useState<string>('en')
     const router = useRouter()
+    const t = useTranslations()
 
     const changeLocale = (locale: string) => {
         setLocale(locale)
@@ -24,9 +26,9 @@ const SwitchLanguage = () => {
         }
     }, [router])
     return (
-        <div className="flex items-center space-x-2">
-            <button className={`border p-2 font-bold rounded-md text-sm ${locale === 'en' ? 'bg-colors-secondary text-colors-primary' : 'text-colors-secondary'}`} onClick={() => changeLocale('en')}>EN</button>
-            <button className={`border p-2 font-bold rounded-md text-sm ${locale === 'he' ? 'bg-colors-secondary text-colors-primary' : 'text-colors-secondary'}`} onClick={() => changeLocale('he')}>HE</button>
+        <div className="flex items-center gap-2">
+            <button className={`border p-2 font-bold rounded-md text-sm ${locale === 'en' ? 'bg-colors-secondary text-colors-primary' : 'text-colors-secondary'}`} onClick={() => changeLocale('en')}>{t('en')}</button>
+            <button className={`border p-2 font-bold rounded-md text-sm ${locale === 'he' ? 'bg-colors-secondary text-colors-primary' : 'text-colors-secondary'}`} onClick={() => changeLocale('he')}>{t('he')}</button>
         </div>
     )
 }

@@ -20,9 +20,9 @@ export default async function RootLayout({
   const messages = await getMessages()
   const locale = await getLocale()
   const session = await auth()
-
+  const dir = locale === 'he' ? 'rtl' : 'ltr' 
   return (
-    <html lang={locale}>
+    <html lang={locale} dir={dir}>
       <head>
         <script dangerouslySetInnerHTML={{ __html: darkModeScript }} />
       </head>

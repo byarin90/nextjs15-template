@@ -1,5 +1,21 @@
 {
-    "Header":{
-        "TodoList":"TodoList"
-    }
+    "TodoList": "TodoList",
+    "en": "English",
+    "he": "Hebrew",
+    "email": "Your email",
+    "email_placeholder": "name@company.com",
+    "image_url": "Image URL",
+    "image_placeholder": "http://image-url.ai.com",
+    "password": "Password",
+    "password_placeholder": "••••••••",
+    "confirm_password": "Confirm password",
+    "terms_accept": "I accept the",
+    "terms_and_conditions": "Terms and Conditions",
+    "sign_up": "Sign Up",
+    "error_something_wrong": "Something went wrong. Please try again later.",
+    "add_todo": "Add Todo",
+    "todo_placeholder": "What needs to be done?",
+    "submit": "Submit",
+    "sign_in": "Sign In",
+    "sign_out": "Sign Out"
 }

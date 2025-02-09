@@ -1,20 +1,21 @@
-import { signIn, signOut } from "@/auth"
+"use client";
+import { signIn, signOut } from "next-auth/react";
 import Link from "next/link";
+import { useTranslations } from "next-intl";
 
 export function SignIn({
     provider,
     className,
 }: { provider?: string, className?: string }) {
+    const t = useTranslations();
     return (
-        <form
-            action={async () => {
-                "use server"
-                await signIn(provider)
-            }}
+        <button
+            onClick={() => signIn(provider)}
+            className={className}
         >
-            <button className={className}>Sign In</button>
-        </form>
-    )
+            {t('sign_in')}
+        </button>
+    );
 }
 
 export function SignOut({
@@ -22,32 +23,29 @@ export function SignOut({
 }: {
     className?: string
 }) {
+    const t = useTranslations();
     return (
-        <form
-            action={async () => {
-                "use server"
-                await signOut()
-            }}
-            className="w-full"
+        <button
+            onClick={() => signOut()}
+            className={className}
         >
-            <button className={className}>
-                Sign Out
-            </button>
-        </form>
-    )
+            {t('sign_out')}
+        </button>
+    );
 }
 
-
-const SignUp = ({
+export function SignUp({
     className,
 }: {
     className?: string
-}) => {
+}) {
+    const t = useTranslations();
     return (
-        <Link href={'/sign-up'} className={className}>
-            Sign Up
+        <Link
+            href="/sign-up"
+            className={className}
+        >
+            {t('sign_up')}
         </Link>
-    )
+    );
 }
-
-export default SignUp

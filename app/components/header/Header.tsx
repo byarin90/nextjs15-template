@@ -3,14 +3,14 @@ import DarkModeToggle from "./components/DarkModeToggle";
 import DropDown from "./components/DropDown";
 import todoLogo from "@/assets/todoLogo.png";
 import Avatar from "./components/Avatar";
-import SignUp, { SignIn, SignOut } from "./components/AuthComponents";
+import  { SignIn, SignOut, SignUp } from "./components/AuthComponents";
 import Link from "next/link";
 import SwitchLanguage from "./components/SwitchLanguage";
 import { useTranslations } from "next-intl";
 
 
-const Header =  ({ session }: { session: any}) => {
-    const t = useTranslations('Header')
+const Header = ({ session }: { session: any }) => {
+    const t = useTranslations()
 
     return (
         <header
@@ -31,8 +31,8 @@ const Header =  ({ session }: { session: any}) => {
         >
             <div className=" mx-auto px-4 sm:px-6 lg:px-8 w-full">
                 <div className="flex justify-between   ">
-                    <div className="flex items-center space-x-8">
-                        <div className="flex-shrink-0 flex items-center space-x-2">
+                    <div className="flex items-center gap-6">
+                        <div className="flex-shrink-0 flex items-center gap-2">
                             <Image
                                 width={40}
                                 height={40}
@@ -44,7 +44,7 @@ const Header =  ({ session }: { session: any}) => {
                         </div>
 
 
-                        <nav className="hidden md:flex items-center space-x-4">
+                        <nav className="hidden md:flex items-center gap-4">
                             <Link
                                 href="/"
                                 className="
@@ -66,8 +66,8 @@ const Header =  ({ session }: { session: any}) => {
                         </nav>
                     </div>
                     <div className="flex items-center space-x-4">
-                        <SwitchLanguage/>
                         <DarkModeToggle />
+                        <SwitchLanguage />
 
                         {!session?.user ? (
                             <>
