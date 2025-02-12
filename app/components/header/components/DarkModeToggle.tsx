@@ -1,11 +1,13 @@
+// DarkModeToggle.client.tsx
 "use client";
-import { useEffect, useState } from 'react';
+import { useEffect, useState } from "react";
 import { SunIcon, MoonIcon } from '@heroicons/react/24/solid';
+import { updateDarkMode } from "@/app/actions/auth/actions";
 
 const DarkModeToggle = () => {
   const [mounted, setMounted] = useState(false);
   const [isDarkMode, setIsDarkMode] = useState(false);
-  
+
   useEffect(() => {
     setMounted(true);
     const darkModePreference = localStorage.getItem('dark') === 'true';
@@ -14,23 +16,24 @@ const DarkModeToggle = () => {
 
   useEffect(() => {
     if (!mounted) return;
-    
+
+    localStorage.setItem('dark', isDarkMode ? 'true' : 'false');
     if (isDarkMode) {
-      localStorage.setItem('dark', 'true');
       document.documentElement.classList.add('dark');
     } else {
-      localStorage.setItem('dark', 'false');
       document.documentElement.classList.remove('dark');
     }
   }, [isDarkMode, mounted]);
 
-  if (!mounted) {
-    return null;
-  }
+  if (!mounted) return null;
 
   return (
     <button
-      onClick={() => setIsDarkMode(!isDarkMode)}
+      onClick={async () => {
+        const newMode = !isDarkMode;
+        setIsDarkMode(newMode);
+        await updateDarkMode(newMode);
+      }}
       className="
         flex items-center 
         p-2 

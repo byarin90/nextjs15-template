@@ -1,5 +1,5 @@
 "use server";
-
+import { cookies } from "next/headers";
 import { UserRegistrationForm } from "@/app/types";
 import { userRegistrationSchema } from "@/app/validations/auth/schema-sign-up";
 import { db } from "@/lib/db";
@@ -34,7 +34,12 @@ export const signUp = async (data: UserRegistrationForm): Promise<{ success: boo
         })
 
         return { success: true, message: "Registration successful" };
-    } catch (error:any) {
+    } catch (error: any) {
         return { success: false, message: error.message || "Registration failed" };
     }
 };
+
+
+export async function updateDarkMode(isDark: boolean) {
+    (await cookies()).set("dark", isDark ? "true" : "false", { path: "/" });
+  }

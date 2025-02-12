@@ -1,8 +1,8 @@
 import type { Metadata } from "next";
+import { cookies } from "next/headers";
 import "./globals.css";
 import Header from "./components/header/Header";
 import Footer from "./components/footer/Footer";
-import { darkModeScript } from "./lib/darkModeScript";
 import { NextIntlClientProvider } from "next-intl";
 import { getLocale, getMessages } from "next-intl/server";
 import { auth } from "@/auth";
@@ -20,12 +20,13 @@ export default async function RootLayout({
   const messages = await getMessages()
   const locale = await getLocale()
   const session = await auth()
+  const darkMode = (await cookies()).get('dark')?.value === 'true';
+  
   const dir = locale === 'he' ? 'rtl' : 'ltr' 
+
   return (
-    <html lang={locale} dir={dir}>
-      <head>
-        <script dangerouslySetInnerHTML={{ __html: darkModeScript }} />
-      </head>
+    <html lang={locale} dir={dir} className={darkMode ? 'dark' : ''}>
+
       <body className={'h-[100vh] bg-colors-primary text-colors-secondary flex flex-col justify-between'}>
         <NextIntlClientProvider messages={messages} locale={locale}>
           <Header session={session} />
