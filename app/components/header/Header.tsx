@@ -1,17 +1,18 @@
 import Image from "next/image";
-import DarkModeToggle from "./components/DarkModeToggle";
 import DropDown from "./components/DropDown";
 import todoLogo from "@/assets/todoLogo.png";
 import Avatar from "./components/Avatar";
-import  { SignIn, SignOut, SignUp } from "./components/AuthComponents";
+import { SignIn, SignOut, SignUp } from "./components/AuthComponents";
 import Link from "next/link";
 import SwitchLanguage from "./components/SwitchLanguage";
 import { useTranslations } from "next-intl";
+import DarkModeToggle from "./components/DarkModeToggle";
 
 
-const Header = ({ session }: { session: any }) => {
+
+
+const Header = ({ session, isDarkMode }: { session: any, isDarkMode?: string }) => {
     const t = useTranslations()
-
     return (
         <header
             className="
@@ -67,8 +68,8 @@ const Header = ({ session }: { session: any }) => {
                         </nav>
                     </div>
                     <div className="flex items-center space-x-4">
-                        <DarkModeToggle />
-                        
+
+                        <DarkModeToggle isDarkMode={isDarkMode} />
                         <SwitchLanguage />
 
                         {!session?.user ? (

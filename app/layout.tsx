@@ -20,16 +20,16 @@ export default async function RootLayout({
   const messages = await getMessages()
   const locale = await getLocale()
   const session = await auth()
-  const darkMode = (await cookies()).get('dark')?.value === 'true';
+  const darkMode = (await cookies()).get('dark')?.value;
   
   const dir = locale === 'he' ? 'rtl' : 'ltr' 
 
   return (
-    <html lang={locale} dir={dir} className={darkMode ? 'dark' : ''}>
+    <html lang={locale} dir={dir} className={darkMode === 'true' ? 'dark' : ''}>
 
       <body className={'h-[100vh] bg-colors-primary text-colors-secondary flex flex-col justify-between'}>
         <NextIntlClientProvider messages={messages} locale={locale}>
-          <Header session={session} />
+          <Header isDarkMode={darkMode} session={session} />
           <div className="h-full">
             {children}
           </div>
