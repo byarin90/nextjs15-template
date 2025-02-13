@@ -35,6 +35,7 @@ const Header = ({ session, isDarkMode }: { session: any, isDarkMode?: string }) 
                     <div className="flex items-center gap-6">
                         <div className="flex-shrink-0 flex items-center gap-2">
                             <Image
+                                loading="eager"
                                 width={40}
                                 height={40}
                                 className="h-8 w-8 rounded-full"

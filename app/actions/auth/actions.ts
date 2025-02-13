@@ -40,15 +40,13 @@ export const signUp = async (data: UserRegistrationForm): Promise<{ success: boo
     }
 };
 
-  export async function updateDarkMode(formData: FormData): Promise<void> {
-    'use server'
+export async function updateDarkMode(formData: FormData): Promise<void> {
     try {
-      const mode = formData.get("mode") === "true" ? 'false' : 'true'
-      console.log(mode)
-      const cookieStore = await cookies();
-      cookieStore.set("dark", mode, { path: "/" });    
-      revalidatePath('/', 'layout')
+        const mode = formData.get("mode") === "true" ? 'false' : 'true'
+        const cookieStore = await cookies();
+        cookieStore.set("dark", mode, { path: "/" });
+        revalidatePath('/', 'layout')
     } catch (error) {
-      console.error('Error updating dark mode:', error)
+        console.error('Error updating dark mode:', error)
     }
-  }
+}

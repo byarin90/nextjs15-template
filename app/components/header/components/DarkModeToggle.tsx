@@ -17,6 +17,7 @@ const DarkModeToggle = ({ isDarkMode }: { isDarkMode?: string }) => {
 
             <form action={updateDarkMode}>
                 <input type="hidden" name="mode" value={isDarkMode === "true" ? "true" : "false"} />
+                
                 <button>
                     <DarkModeIcon isDarkMode={isDarkMode === "true"} />
                 </button>
