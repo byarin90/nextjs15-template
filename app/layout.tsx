@@ -29,7 +29,7 @@ export default async function RootLayout({
 
       <body className={'h-[100vh] bg-colors-primary text-colors-secondary flex flex-col justify-between'}>
         <NextIntlClientProvider messages={messages} locale={locale}>
-          <Header isDarkMode={darkMode} session={session} />
+          <Header isDarkMode={darkMode} session={session} locale={locale} />
           <div className="h-full">
             {children}
           </div>

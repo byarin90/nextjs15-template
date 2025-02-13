@@ -4,9 +4,9 @@ import { useEffect, useState } from "react"
 import { useRouter } from "next/navigation"
 import { useTranslations } from "use-intl"
 
-const SwitchLanguage = () => {
+const SwitchLanguage = ({currentLocale}: {currentLocale: string}) => {
 
-    const [locale, setLocale] = useState<string>('en')
+    const [locale, setLocale] = useState<string>(currentLocale)
     const router = useRouter()
     const t = useTranslations()
 

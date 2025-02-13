@@ -11,7 +11,7 @@ import DarkModeToggle from "./components/DarkModeToggle";
 
 
 
-const Header = ({ session, isDarkMode }: { session: any, isDarkMode?: string }) => {
+const Header = ({ session, isDarkMode, locale }: { session: any, isDarkMode?: string, locale: string }) => {
     const t = useTranslations()
     return (
         <header
@@ -71,7 +71,7 @@ const Header = ({ session, isDarkMode }: { session: any, isDarkMode?: string }) 
                     <div className="flex items-center space-x-4">
 
                         <DarkModeToggle isDarkMode={isDarkMode} />
-                        <SwitchLanguage />
+                        <SwitchLanguage currentLocale={locale} />
 
                         {!session?.user ? (
                             <>
