@@ -56,12 +56,23 @@ const Header = ({ session, isDarkMode, locale }: { session: any, isDarkMode?: st
                             >
                                 Home
                             </Link>
+                            <Link
+                                href="/polling"
+                                className="
+                                  hover:text-colors-accent 
+                                  transition
+                                "
+                            >
+                                Polling
+                            </Link>
                             {session?.user && (
                                 <DropDown
                                     label="Services"
                                     items={[
                                         { href: "/todos-local", label: "Todos-Local" },
-
+                                        { href: "/todos", label: "Todos" },
+                                        { href: "/polling", label: "Polling" },
+                                        { href: "/courses", label: "Courses" },
                                     ]}
                                 />
 

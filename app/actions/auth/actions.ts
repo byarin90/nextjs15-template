@@ -5,6 +5,7 @@ import { userRegistrationSchema } from "@/app/validations/auth/schema-sign-up";
 import { db } from "@/lib/db";
 import bcrypt from "bcrypt";
 import { revalidatePath } from "next/cache";
+import { auth } from "@/auth";
 
 export const signUp = async (data: UserRegistrationForm): Promise<{ success: boolean, message?: string }> => {
     try {
@@ -49,4 +50,10 @@ export async function updateDarkMode(formData: FormData): Promise<void> {
     } catch (error) {
         console.error('Error updating dark mode:', error)
     }
+}
+
+
+export const checkAuth = async () => {
+    const session = await auth();
+    return session
 }
