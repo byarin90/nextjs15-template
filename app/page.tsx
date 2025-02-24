@@ -1,3 +1,4 @@
+import { Button } from "@/components/ui/button";
 import Image from "next/image";
 
 export default function Home() {
@@ -64,7 +65,7 @@ export default function Home() {
             />
             Deploy now
           </a>
-
+          <Button >Shadcn Button</Button>
           <a
             className="
               rounded-full 
@@ -82,9 +83,9 @@ export default function Home() {
             Read our docs
           </a>
 
-     
+
         </div>
-            {/* {[ 1, 2, 3, 4, 5, 6, 7, 8, 9, 10,11,12,13,15,231,231 ].map((i)=>(
+        {/* {[ 1, 2, 3, 4, 5, 6, 7, 8, 9, 10,11,12,13,15,231,231 ].map((i)=>(
                <div key={i} className="flex gap-4 items-center flex-col sm:flex-row">
                 s
                </div>
