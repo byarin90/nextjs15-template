@@ -45,7 +45,6 @@ const Header = ({ session, isDarkMode, locale }: { session: any, isDarkMode?: st
                             <span className="font-bold text-xl">{t('TodoList')}</span>
                         </div>
 
-
                         <nav className="hidden md:flex items-center gap-4">
                             <Link
                                 href="/"
@@ -93,11 +92,12 @@ const Header = ({ session, isDarkMode, locale }: { session: any, isDarkMode?: st
                                       px-4 py-2 
                                       border 
                                       shadow-sm
-                                      border-colors-secondary/20 
+                                      border-colors-secondary 
+                                      text-colors-primary
                                       rounded-md 
-                                      hover:bg-black/10
                                       transition
-                                    dark:hover:bg-white/10"
+                                      hover:bg-black
+                                      "
                                 />
                                 <SignUp
                                     className="
@@ -108,7 +108,7 @@ const Header = ({ session, isDarkMode, locale }: { session: any, isDarkMode?: st
                                       px-4 py-2 rounded-md
                                       hover:bg-black/70
                                       transition
-                                      dark:hover:bg-white/70
+                                      hover:bg-white/70
                                       "
                                 />
                             </>

@@ -4,9 +4,9 @@ import { MoonIcon, SunIcon } from "@heroicons/react/24/outline";
 const DarkModeIcon = ({ isDarkMode }: { isDarkMode: boolean }) => {
     return <div className="">
         {isDarkMode ? (
-            <SunIcon className="h-6 w-6 text-colors-warning" />
+            <SunIcon  className="h-6 w-6 text-colors-secondary" />
         ) : (
-            <MoonIcon className="h-6 w-6 text-colors-accent" />
+            <MoonIcon  className="h-6 w-6 bg-colors-primary" />
         )}
     </div>;
 };
@@ -18,7 +18,7 @@ const DarkModeToggle = ({ isDarkMode }: { isDarkMode?: string }) => {
             <form action={updateDarkMode}>
                 <input type="hidden" name="mode" value={isDarkMode === "true" ? "true" : "false"} />
                 
-                <button>
+                <button className="cursor-pointer">
                     <DarkModeIcon isDarkMode={isDarkMode === "true"} />
                 </button>
             </form>
