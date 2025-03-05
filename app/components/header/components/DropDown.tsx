@@ -16,36 +16,35 @@ const DropDown = ({
   return (
     <div
       className="relative"
-      onMouseEnter={() => setIsDropdownOpen(true)} 
-      onMouseLeave={() => setIsDropdownOpen(false)} 
+      onMouseEnter={() => setIsDropdownOpen(true)}
+      onMouseLeave={() => setIsDropdownOpen(false)}
     >
-      <button
-        className="inline-flex items-center hover:text-indigo-300 transition"
-      >
+      <button className="inline-flex items-center hover:text-indigo-300 transition">
         {label}
         <ChevronDownIcon className="h-5 w-5 ml-1" />
       </button>
 
       {isDropdownOpen && (
         <div
-          className="absolute pt-2 w-48 
-                     dark:bg-colors-primary dark:text-white
-                     bg-white text-color-bg-colors-primary
-                     shadow-lg rounded-md py-2 transition"
+          className="absolute z-50 pt-2 w-48 
+                 dark:bg-secondary dark:text-white
+                 bg-white text-color-bg-primary
+                 shadow-lg rounded-md py-2 transition"
+          onMouseEnter={() => setIsDropdownOpen(true)}
+          onMouseLeave={() => setIsDropdownOpen(false)}
         >
           {items.map((item, index) => (
             <Link
               key={index}
               href={item.href}
-              className="block px-4 py-2 hover:bg-gray-700 dark:hover:bg-gray-600 hover:text-colors-primary transition"
+              className="block px-4 py-2 hover:bg-gray-700 dark:hover:bg-gray-600 hover:text-primary transition"
             >
               {item.label}
             </Link>
           ))}
         </div>
       )}
-    </div>
-  );
+    </div>);
 };
 
 export default DropDown;

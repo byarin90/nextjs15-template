@@ -17,7 +17,7 @@ export default function Home() {
     >
       <main className="flex flex-col gap-8 row-start-2 items-center sm:items-start">
         <Image
-          className="dark:invert"
+          className="dark:invert  dark:hover:invert z-0"
           src="/next.svg"
           alt="Next.js logo"
           width={180}
@@ -26,11 +26,11 @@ export default function Home() {
         />
         <ol className="list-inside list-decimal text-sm text-center sm:text-left font-[family-name:var(--font-geist-mono)]">
           <li className="mb-2">
-            Get started by editing{" "}
-            <code className="bg-colors-secondary/5 dark:bg-colors-secondary/10 px-1 py-0.5 rounded font-semibold">
+            Type{" "}
+            <code className="font-mono font-bold text-primary dark:text-primary">
               app/page.tsx
-            </code>
-            .
+            </code>{" "}
+            in your editor and edit the text.
           </li>
           <li>Save and see your changes instantly.</li>
         </ol>
@@ -39,19 +39,19 @@ export default function Home() {
           <a
             className="
               rounded-full 
-              border border-solid border-colors-secondary/20 
+              border border-solid border-secondary/20 
               transition-colors 
               flex items-center justify-center
               text-white
-              dark:hover:text-colors-secondary
+              dark:hover:text-secondary
               gap-2 
               hover:bg-black/70
               dark:hover:bg-black/10
-              bg-colors-secondary
-              dark:text-colors-primary
+              bg-secondary
+              dark:text-primary
               text-sm sm:text-base 
               h-10 sm:h-12 px-4 sm:px-5
-            "
+            " 
             href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
             target="_blank"
             rel="noopener noreferrer"

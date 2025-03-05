@@ -25,7 +25,7 @@ export function CourseSidebar({ course, onLessonSelect }: CourseSidebarProps) {
   };
 
   return (
-    <div className="w-full max-w-[400px] h-full overflow-y-auto bg-background border-l">
+    <div className="w-full max-w-[400px] h-full overflow-y-auto border-l">
       <div className="p-4">
         <h2 className="text-2xl font-bold mb-4">{course.title}</h2>
         <div className="space-y-2">

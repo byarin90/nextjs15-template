@@ -1,15 +1,18 @@
 import Course from "@/app/components/courses/Course";
 
 interface CoursePageProps {
-  params: {
+  params: Promise<{
     courseId: string;
-  };
-  searchParams: {
+  }>;
+  searchParams: Promise<{
     chapter?: string;
     lesson?: string;
-  };
+  }>;
 }
 
-export default function CoursePage({ params, searchParams }: CoursePageProps) {
-  return <Course params={params} searchParams={searchParams} />;
+export default async function CoursePage({ params, searchParams }: CoursePageProps) {
+  const { courseId } = await params;
+  const { chapter, lesson } = await searchParams;
+
+  return <Course params={{ courseId }} searchParams={{ chapter, lesson }} />;
 }
