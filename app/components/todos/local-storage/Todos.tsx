@@ -14,15 +14,15 @@ const Todos = () => {
 
     return (
         <div className="p-4 max-w-2xl mx-auto">
-            <h1 className="text-2xl font-bold mb-4 dark:text-primary">My Todos</h1>
+            <h1 className="text-2xl font-bold mb-4 text-foreground">My Todos</h1>
             <TodoForm />
             <div className="space-y-4">
                 {todos.map((todo) => (
                     <div 
                         className={`p-4 rounded shadow-lg border transition-colors ${
                             todo.done 
-                                ? 'bg-gray-100 border-gray-200 dark:bg-gray-700 dark:border-gray-600' 
-                                : 'bg-white border-gray-200 dark:bg-secondary dark:border-gray-700'
+                                ? 'bg-muted border-muted dark:bg-muted dark:border-muted' 
+                                : 'bg-background border-border dark:bg-background dark:border-border'
                         }`} 
                         key={todo.id}
                     >
@@ -36,12 +36,12 @@ const Todos = () => {
                                 />
                                 <div>
                                     <h2 className={`text-lg font-semibold ${
-                                        todo.done ? 'line-through text-gray-500' : 'dark:text-colors-primary'
+                                        todo.done ? 'line-through text-muted-foreground' : 'text-foreground'
                                     }`}>
                                         {todo.title}
                                     </h2>
                                     <p className={`text-sm ${
-                                        todo.done ? 'text-gray-400' : 'text-gray-600 dark:text-colors-primary'
+                                        todo.done ? 'text-muted-foreground' : 'text-foreground'
                                     }`}>
                                         {todo.description}
                                     </p>
@@ -49,7 +49,7 @@ const Todos = () => {
                             </div>
                             <button
                                 onClick={() => deleteTodo(todo.id)}
-                                className="text-red-500 hover:text-red-700 transition-colors"
+                                className="text-destructive hover:text-destructive/90 transition-colors"
                             >
                                 Delete
                             </button>

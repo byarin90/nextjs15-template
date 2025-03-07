@@ -38,7 +38,7 @@ const TodoForm = () => {
                 <input
                     {...register("title", { required: "Title is required" })}
                     placeholder="Todo title"
-                    className="w-full p-2 border rounded focus:outline-none focus:ring-2 focus:ring-blue-400 dark:bg-secondary dark:text-colors-primary"
+                    className="w-full p-2 border rounded focus:outline-none focus:ring-2 focus:ring-ring bg-background text-foreground dark:bg-secondary dark:text-secondary-foreground"
                 />
                 {errors.title && (
                     <span className="text-red-500 text-sm">{errors.title.message}</span>
@@ -48,7 +48,7 @@ const TodoForm = () => {
                 <textarea
                     {...register("description", { required: "Description is required" })}
                     placeholder="Todo description"
-                    className="w-full p-2 border rounded focus:outline-none focus:ring-2 focus:ring-blue-400 dark:bg-secondary dark:text-colors-primary"
+                    className="w-full p-2 border rounded focus:outline-none focus:ring-2 focus:ring-ring bg-background text-foreground dark:bg-secondary dark:text-secondary-foreground"
                 />
                 {errors.description && (
                     <span className="text-red-500 text-sm">
@@ -58,7 +58,7 @@ const TodoForm = () => {
             </div>
             <button
                 type="submit"
-                className="w-full bg-blue-500 text-white p-2 rounded hover:bg-blue-600 transition-colors"
+                className="w-full bg-primary text-primary-foreground p-2 rounded hover:bg-primary/90 transition-colors"
             >
                 Add Todo
             </button>

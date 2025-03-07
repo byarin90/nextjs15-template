@@ -40,7 +40,7 @@ export default function AddTodo() {
             <div>
                 <label className="block mb-2 text-sm font-medium text-primary">Your email</label>
                 <input {...register("email")} type="email" name="email" id="email" className="bg-primary border border-gray-300 text-primary text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="name@company.com" />
-                <p className="text-sm text-colors-error mt-1">
+                <p className="text-sm text-destructive mt-1">
                     {errors?.email?.message || ' '}
                 </p>
 
@@ -48,21 +48,21 @@ export default function AddTodo() {
             <div>
                 <label className="block mb-2 text-sm font-medium text-primary">Image URL</label>
                 <input {...register('image')} type="text" name="image" id="image" placeholder="http://image-url.ai.com" className="bg-gray-50 border border-gray-300 text-primary text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:focus:ring-blue-500 dark:focus:border-blue-500" />
-                <p className="text-sm text-colors-error mt-1">
+                <p className="text-sm text-destructive mt-1">
                     {errors?.image?.message || ' '}
                 </p>
             </div>
             <div>
                 <label className="block mb-2 text-sm font-medium text-primary">Password</label>
                 <input {...register('password')} type="password" name="password" id="password" placeholder="••••••••" className="bg-gray-50 border border-gray-300 text-primary text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:focus:ring-blue-500 dark:focus:border-blue-500" />
-                <p className="text-sm text-colors-error mt-1">
+                <p className="text-sm text-destructive mt-1">
                     {errors?.password?.message || ' '}
                 </p>
             </div>
             <div>
                 <label className="block mb-2 text-sm font-medium text-primary">Confirm password</label>
                 <input {...register('confirmPassword')} type="password" name="confirmPassword" id="confirmPassword" placeholder="••••••••" className="bg-gray-50 border border-gray-300 text-primary text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:focus:ring-blue-500 dark:focus:border-blue-500" />
-                <p className="text-sm text-colors-error mt-1">
+                <p className="text-sm text-destructive mt-1">
                     {errors?.confirmPassword?.message || ' '}
                 </p>
             </div>
@@ -94,17 +94,16 @@ export default function AddTodo() {
                 </div>
             </div>
             {errors.terms && (
-                <p className="text-sm text-colors-error mt-1">
+                <p className="text-sm text-destructive mt-1">
                     {errors.terms.message}
                 </p>
             )}
             {error && (
-                <p className="text-sm text-colors-error mt-1">
+                <p className="text-sm text-destructive mt-1">
                     {error}
                 </p>
             )}
-            <button type="submit" className="w-full text-colors-secondary dark:text-white text-slate-800 dark:bg-slate-800 bg-slate-300 py-2.5 px-4 text-sm font-medium text-primary rounded-lg hover:bg-slate-400 dark:hover:bg-slate-700 transition-colors   
-                                ">Create an account</button>
+            <button type="submit" className="w-full bg-secondary text-secondary-foreground dark:bg-secondary dark:text-secondary-foreground py-2.5 px-4 text-sm font-medium rounded-lg hover:bg-secondary/90 dark:hover:bg-secondary/90 transition-colors">Create an account</button>
 
         </form>
 

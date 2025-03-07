@@ -27,8 +27,8 @@ const SwitchLanguage = ({currentLocale}: {currentLocale: string}) => {
     }, [router])
     return (
         <div className="flex items-center gap-2">
-            <button className={`border p-2 font-bold rounded-md text-sm ${locale === 'en' ? 'bg-colors-secondary text-colors-primary' : 'text-colors-secondary'}`} onClick={() => changeLocale('en')}>{t('en')}</button>
-            <button className={`border p-2 font-bold rounded-md text-sm ${locale === 'he' ? 'bg-colors-secondary text-colors-primary' : 'text-colors-secondary'}`} onClick={() => changeLocale('he')}>{t('he')}</button>
+            <button className={`border p-2 font-bold rounded-md text-sm ${locale === 'en' ? 'bg-secondary text-secondary-foreground' : 'text-muted-foreground'}`} onClick={() => changeLocale('en')}>{t('en')}</button>
+            <button className={`border p-2 font-bold rounded-md text-sm ${locale === 'he' ? 'bg-secondary text-secondary-foreground' : 'text-muted-foreground'}`} onClick={() => changeLocale('he')}>{t('he')}</button>
         </div>
     )
 }

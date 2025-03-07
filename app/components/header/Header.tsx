@@ -16,11 +16,11 @@ const Header = ({ session, isDarkMode, locale }: { session: any, isDarkMode?: st
     return (
         <header
             className="
-            bg-colors-primary 
-            text-colors-secondary 
+            bg-background
+            text-foreground
             shadow-lg 
             border-b 
-            border-colors-secondary
+            border-border
             flex
             h-[5rem]
             items-center
@@ -45,12 +45,11 @@ const Header = ({ session, isDarkMode, locale }: { session: any, isDarkMode?: st
                             <span className="font-bold text-xl">{t('TodoList')}</span>
                         </div>
 
-
                         <nav className="hidden md:flex items-center gap-4">
                             <Link
                                 href="/"
                                 className="
-                                  hover:text-colors-accent 
+                                  hover:text-accent-foreground 
                                   transition
                                 "
                             >
@@ -59,20 +58,41 @@ const Header = ({ session, isDarkMode, locale }: { session: any, isDarkMode?: st
                             <Link
                                 href="/polling"
                                 className="
-                                  hover:text-colors-accent 
+                                  hover:text-accent-foreground 
                                   transition
                                 "
                             >
                                 Polling
+                            </Link>
+                            <Link
+                                href="/animations"
+                                className="
+                                  hover:text-accent-foreground 
+                                  transition
+                                "
+                            >
+                                Animations
+                            </Link>
+                            <Link
+                                href="/colors"
+                                className="
+                                  hover:text-accent-foreground 
+                                  transition
+                                "
+                            >
+                                Colors
                             </Link>
                             {session?.user && (
                                 <DropDown
                                     label="Services"
                                     items={[
                                         { href: "/todos-local", label: "Todos-Local" },
+                                        { href: "/todos-local", label: "Todos-Local" },
                                         { href: "/todos", label: "Todos" },
                                         { href: "/polling", label: "Polling" },
                                         { href: "/courses", label: "Courses" },
+                                        { href: "/colors", label: "Colors" },
+                                        { href: "/animations", label: "Animations" },
                                     ]}
                                 />
 
@@ -93,22 +113,23 @@ const Header = ({ session, isDarkMode, locale }: { session: any, isDarkMode?: st
                                       px-4 py-2 
                                       border 
                                       shadow-sm
-                                      border-colors-secondary/20 
+                                      border-border
+                                      text-foreground
                                       rounded-md 
-                                      hover:bg-black/10
                                       transition
-                                    dark:hover:bg-white/10"
+                                      hover:bg-black
+                                      "
                                 />
                                 <SignUp
                                     className="
                                       hidden sm:block 
                                       shadow-sm
-                                      bg-colors-secondary 
-                                      text-colors-primary
+                                      bg-secondary
+                                      text-secondary-foreground
                                       px-4 py-2 rounded-md
                                       hover:bg-black/70
                                       transition
-                                      dark:hover:bg-white/70
+                                      hover:bg-white/70
                                       "
                                 />
                             </>
@@ -117,10 +138,10 @@ const Header = ({ session, isDarkMode, locale }: { session: any, isDarkMode?: st
                                 <SignOut
                                     className="
                                       hidden sm:block 
-                                      bg-colors-secondary 
-                                      text-colors-primary
+                                      bg-secondary
+                                      text-secondary-foreground
                                       px-4 py-2 rounded-md
-                                      hover:bg-colors-secondary/90 
+                                      hover:bg-secondary/90
                                       transition-colors
                                     "
                                 />

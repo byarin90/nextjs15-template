@@ -4,9 +4,9 @@ import { MoonIcon, SunIcon } from "@heroicons/react/24/outline";
 const DarkModeIcon = ({ isDarkMode }: { isDarkMode: boolean }) => {
     return <div className="">
         {isDarkMode ? (
-            <SunIcon className="h-6 w-6 text-colors-warning" />
+            <SunIcon className="h-6 w-6 text-yellow-400" />
         ) : (
-            <MoonIcon className="h-6 w-6 text-colors-accent" />
+            <MoonIcon className="h-6 w-6 text-primary" />
         )}
     </div>;
 };

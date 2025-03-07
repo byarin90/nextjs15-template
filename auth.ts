@@ -98,6 +98,7 @@ export const { handlers, auth, signIn, signOut, unstable_update } = NextAuth({
     },
   },
   experimental: { enableWebAuthn: true },
+  trustHost: true,
 })
 
 declare module "@auth/core/adapters" {
