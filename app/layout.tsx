@@ -27,10 +27,10 @@ export default async function RootLayout({
   return (
     <html lang={locale} dir={dir} className={darkMode === 'true' ? 'dark' : ''}>
 
-      <body className={'h-[100vh] bg-colors-primary text-colors-secondary flex flex-col justify-between'}>
+      <body className={'min-h-screen bg-background text-foreground flex flex-col justify-between'}>
         <NextIntlClientProvider messages={messages} locale={locale}>
           <Header isDarkMode={darkMode} session={session} locale={locale} />
-          <div className="h-full">
+          <div className="h-full ">
             {children}
           </div>
           <Footer />

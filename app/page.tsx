@@ -9,8 +9,8 @@ export default function Home() {
         justify-items-center 
        pt-16
         font-[family-name:var(--font-geist-sans)]
-        bg-colors-primary  
-        text-colors-secondary 
+        bg-background  
+        text-foreground 
         transition-colors 
         duration-300
       "
@@ -39,16 +39,15 @@ export default function Home() {
           <a
             className="
               rounded-full 
-              border border-solid border-secondary/20 
-              transition-colors 
+              border border-solid border-border/20 
               flex items-center justify-center
-              text-white
-              dark:hover:text-secondary
+              text-secondary-foreground
+              dark:hover:text-secondary-foreground
               gap-2 
-              hover:bg-black/70
-              dark:hover:bg-black/10
+              hover:bg-secondary/90
+              dark:hover:bg-secondary/90
               bg-secondary
-              dark:text-primary
+              dark:text-secondary-foreground
               text-sm sm:text-base 
               h-10 sm:h-12 px-4 sm:px-5
             " 
@@ -69,10 +68,10 @@ export default function Home() {
           <a
             className="
               rounded-full 
-              border border-colors-secondary/20
+              border border-border/20
               transition-colors 
               flex items-center justify-center 
-              hover:bg-colors-secondary/5
+              hover:bg-secondary/5
               text-sm sm:text-base 
               h-10 sm:h-12 px-4 sm:px-5 sm:min-w-44
             "

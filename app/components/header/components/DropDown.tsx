@@ -27,8 +27,8 @@ const DropDown = ({
       {isDropdownOpen && (
         <div
           className="absolute z-50 pt-2 w-48 
-                 dark:bg-secondary dark:text-white
-                 bg-white text-color-bg-primary
+                 bg-background text-foreground
+                 border border-border
                  shadow-lg rounded-md py-2 transition"
           onMouseEnter={() => setIsDropdownOpen(true)}
           onMouseLeave={() => setIsDropdownOpen(false)}
@@ -37,7 +37,7 @@ const DropDown = ({
             <Link
               key={index}
               href={item.href}
-              className="block px-4 py-2 hover:bg-gray-700 dark:hover:bg-gray-600 hover:text-primary transition"
+              className="block px-4 py-2 hover:bg-muted hover:text-primary transition"
             >
               {item.label}
             </Link>
