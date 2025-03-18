@@ -53,8 +53,8 @@ model User {
   id       String    @id @default(cuid())
   name     String?
   email    String?   @unique
-  username String?    @unique
-  password String
+  username String?   @unique
+  password String?
   tasks    Task[]
 
   emailVerified DateTime? @map("email_verified")
@@ -90,5 +90,3 @@ model Task {
     @@index([authorId])
     @@map("tasks")
 }
-
-

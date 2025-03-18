@@ -29,7 +29,7 @@ export const { handlers, auth, signIn, signOut, unstable_update } = NextAuth({
           where: { username: credentials.username as string },
         });
 
-        if (user && await bcrypt.compare(credentials.password as string, user.password)) {
+        if (user && await bcrypt.compare(credentials.password as string, user.password as string)) {
           return user
         }
 
@@ -43,7 +43,18 @@ export const { handlers, auth, signIn, signOut, unstable_update } = NextAuth({
     }),
     GitHub({ 
       clientId: process.env.AUTH_GITHUB_ID!, 
-      clientSecret: process.env.AUTH_GITHUB_SECRET! 
+      clientSecret: process.env.AUTH_GITHUB_SECRET!,
+      profile(profile) {
+        return {
+          id: profile.id.toString(),
+          name: profile.name || profile.login,
+          email: profile.email,
+          image: profile.avatar_url,
+          username: profile.login,
+          role: "USER" as Role,
+          password: null  // Will be set in the events handlers
+        }
+      }
     }),
     Google({ 
       clientId: process.env.GOOGLE_CLIENT_ID!, 
@@ -57,15 +68,7 @@ export const { handlers, auth, signIn, signOut, unstable_update } = NextAuth({
   },
   secret: process.env.NEXTAUTH_SECRET,
   callbacks: {
-    async signIn({ user }) {
-      if (!user.username) {
-        user.username = user.email as string;
-      }
-
-      if(!user?.password){
-        const salt = await bcrypt.genSalt() as any
-        user.password = await bcrypt.hash('Aa123456', salt);
-      }
+    async signIn() {
       return true;
     },
     authorized({ request, auth }) {
@@ -79,9 +82,10 @@ export const { handlers, auth, signIn, signOut, unstable_update } = NextAuth({
       }
 
       if (user) {
-        token.id = user.id;
-        token.email = user.email;
-        token.role = user.role;
+        token.id = user.id as string;
+        token.email = user.email as string;
+        token.role = user.role as Role;
+        token.username = user.username || null;
       }
       return token;
     },
@@ -89,13 +93,127 @@ export const { handlers, auth, signIn, signOut, unstable_update } = NextAuth({
       if (token) {
         session.user = {
           ...session.user,
-          id: token.id as string,
-          email: token.email as string,
-          role: token.role as Role,
+          id: token.id,
+          email: token.email,
+          role: token.role,
+          username: token.username || undefined,
         };
       }
       return session;
     },
+  },
+  events: {
+    createUser: async ({ user }) => {
+      console.log("CREATE USER EVENT TRIGGERED:", JSON.stringify(user, null, 2));
+      
+      try {
+        // We know the user was created but might not have username or password
+        // Let's set defaults
+        const salt = await bcrypt.genSalt();
+        const hashedPassword = await bcrypt.hash('Aa123456', salt);
+        
+        // Get the email from account if user email is not available
+        const account = await db.account.findFirst({
+          where: { userId: user.id }
+        });
+        
+        console.log("FOUND ACCOUNT:", JSON.stringify(account, null, 2));
+        
+        // Get user's profile info from provider
+        const updatedUser = await db.user.update({
+          where: { id: user.id },
+          data: {
+            // Use email from account if user email is null
+            email: user.email || "default@example.com",
+            // Use email as username if username is null
+            username: user.email || user.username,
+            // Set default password if none exists
+            password: hashedPassword
+          }
+        });
+        
+        console.log("UPDATED USER:", JSON.stringify(updatedUser, null, 2));
+      } catch (error) {
+        console.error("ERROR IN CREATE USER EVENT:", error);
+        console.error(error);
+      }
+    },
+    linkAccount: async ({ user, account, profile }) => {
+      console.log("LINK ACCOUNT EVENT:", {
+        user: JSON.stringify(user, null, 2),
+        account: JSON.stringify(account, null, 2),
+        profile: JSON.stringify(profile, null, 2)
+      });
+      
+      // If we have user email from the provider but not in our database, update it
+      if (profile && user.id) {
+        try {
+          // Get profile email based on provider
+          let email = null;
+          let username = null;
+          
+          // Extract data based on provider
+          if (account?.provider === 'github' && profile) {
+            // GitHub profile has email and login fields
+            email = (profile as any).email;
+            username = (profile as any).login;
+          } else if (account?.provider === 'google' && profile) {
+            // Google profile has email field
+            email = (profile as any).email;
+            username = email; // Use email as username for Google
+          }
+          
+          // Find existing user
+          const existingUser = await db.user.findUnique({
+            where: { id: user.id },
+            include: { accounts: true }
+          });
+          
+          console.log("EXISTING USER FOR LINKING:", JSON.stringify(existingUser, null, 2));
+          
+          if (existingUser) {
+            // Keep existing username and email if already set
+            const updatedData: any = {};
+            
+            // Only update fields if they are empty
+            if (!existingUser.username && username) {
+              updatedData.username = username;
+            }
+            
+            if (!existingUser.email && email) {
+              updatedData.email = email;
+            }
+            
+            // If password is not set, set a default one
+            if (!existingUser.password) {
+              const salt = await bcrypt.genSalt();
+              updatedData.password = await bcrypt.hash('Aa123456', salt);
+            }
+            
+            // Only update if we have changes to make
+            if (Object.keys(updatedData).length > 0) {
+              const updated = await db.user.update({
+                where: { id: user.id },
+                data: updatedData
+              });
+              
+              console.log("UPDATED USER FROM OAUTH LINK:", JSON.stringify(updated, null, 2));
+            } else {
+              console.log("NO UPDATES NEEDED FOR USER:", user.id);
+            }
+          }
+        } catch (error) {
+          console.error("ERROR UPDATING USER FROM OAUTH:", error);
+        }
+      }
+    },
+    signIn: async ({ user, account, profile }) => {
+      console.log("SIGN IN EVENT:", { 
+        user: JSON.stringify(user, null, 2),
+        account: JSON.stringify(account, null, 2),
+        profile: JSON.stringify(profile, null, 2) 
+      });
+    }
   },
   experimental: { enableWebAuthn: true },
   trustHost: true,
@@ -129,6 +247,6 @@ declare module "next-auth" {
 
 declare module "next-auth/jwt" {
   interface JWT {
-    role?: Role;
+    role: Role;
   }
 }
