@@ -4,7 +4,7 @@ import { useEffect, useState } from "react"
 import { useRouter } from "next/navigation"
 import { useTranslations } from "use-intl"
 
-const SwitchLanguage = ({currentLocale}: {currentLocale: string}) => {
+const SwitchLanguage = ({ currentLocale }: { currentLocale: string }) => {
 
     const [locale, setLocale] = useState<string>(currentLocale)
     const router = useRouter()
@@ -12,8 +12,14 @@ const SwitchLanguage = ({currentLocale}: {currentLocale: string}) => {
 
     const changeLocale = (locale: string) => {
         setLocale(locale)
-        document.cookie = `locale=${locale};`;
-        router.refresh()
+        document.cookie = `locale=${locale}; path=/; max-age=31536000`;
+
+        // כאשר אנחנו בדף login, אנחנו צריכים לטעון מחדש את הדף במלואו
+        if (window.location.pathname.includes('/auth/login') || window.location.pathname.includes('/auth/register')) {
+            window.location.href = window.location.href; // גורם לטעינה מחדש מלאה של הדף
+        } else {
+            router.refresh();
+        }
     }
 
     useEffect(() => {
@@ -24,11 +30,15 @@ const SwitchLanguage = ({currentLocale}: {currentLocale: string}) => {
             setLocale(browserLocale)
             document.cookie = `locale=${browserLocale}; path=/; max-age=31536000`;
         }
-    }, [router])
+    }, [])
     return (
-        <div className="flex items-center gap-2">
-            <button className={`border p-2 font-bold rounded-md text-sm ${locale === 'en' ? 'bg-secondary text-secondary-foreground' : 'text-muted-foreground'}`} onClick={() => changeLocale('en')}>{t('en')}</button>
-            <button className={`border p-2 font-bold rounded-md text-sm ${locale === 'he' ? 'bg-secondary text-secondary-foreground' : 'text-muted-foreground'}`} onClick={() => changeLocale('he')}>{t('he')}</button>
+        <div className="flex items-center ">
+            {locale == 'he' ?
+                <button className={`border p-2 font-bold rounded-md text-sm `} onClick={() => changeLocale('en')}>{t('en')}</button>
+                : <button className={`border p-2 font-bold rounded-md text-sm`} onClick={() => changeLocale('he')}>{t('he')}</button>
+
+            }
+
         </div>
     )
 }

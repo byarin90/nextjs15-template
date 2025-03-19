@@ -1,8 +1,8 @@
 import NextAuth, { DefaultSession } from "next-auth";
 import "next-auth/jwt";
 import bcrypt from "bcrypt";
-import GitHub from "next-auth/providers/github";
 import Google from "next-auth/providers/google";
+import Github from "next-auth/providers/github";
 import CredentialsProvider from "next-auth/providers/credentials";
 import { PrismaAdapter } from "@auth/prisma-adapter";
 import { Role } from "@prisma/client";
@@ -55,6 +55,10 @@ export const { handlers, auth, signIn, signOut, unstable_update } = NextAuth({
   session: { strategy: 'jwt', maxAge: SESSION_MAX_AGE },
   experimental: { enableWebAuthn: true },
   trustHost: true,
+  pages: {
+    signIn: '/auth/login',
+    error: '/auth/error',
+  },
   providers: [
     CredentialsProvider({
       name: "Credentials",
@@ -67,8 +71,14 @@ export const { handlers, auth, signIn, signOut, unstable_update } = NextAuth({
           throw new Error("Missing username or password");
         }
 
+        // Check if input is an email or username
+        const username = credentials.username as string;
+        const isEmail = username.includes('@');
+
         const user = await db.user.findUnique({
-          where: { username: credentials.username as string },
+          where: isEmail 
+            ? { email: username } 
+            : { username: username },
         });
 
         const isValidPassword = user &&
@@ -77,19 +87,6 @@ export const { handlers, auth, signIn, signOut, unstable_update } = NextAuth({
         if (isValidPassword) return user;
         throw new Error("Invalid username or password");
       },
-    }),
-    GitHub({
-      clientId: process.env.AUTH_GITHUB_ID!,
-      clientSecret: process.env.AUTH_GITHUB_SECRET!,
-      profile(profile) {
-        return {
-          name: profile.name || profile.login,
-          email: profile.email,
-          image: profile.avatar_url,
-          username: profile.login,
-          role: "USER" as Role,
-        };
-      }
     }),
     Google({
       clientId: process.env.GOOGLE_CLIENT_ID!,
@@ -101,35 +98,47 @@ export const { handlers, auth, signIn, signOut, unstable_update } = NextAuth({
           image: profile.picture,
           role: "USER" as Role,
         };
-      }
+      },
+      allowDangerousEmailAccountLinking: true,
+    }),
+    Github({
+      clientId: process.env.AUTH_GITHUB_ID!,
+      clientSecret: process.env.AUTH_GITHUB_SECRET!,
+      profile(profile) {
+        return {
+          name: profile.name || profile.login,
+          email: profile.email,
+          image: profile.avatar_url,
+          username: profile.login,
+          role: "USER" as Role,
+        };
+      },
+      allowDangerousEmailAccountLinking: true,
     }),
   ],
 
   callbacks: {
-    async jwt({ token, user }) {
+    jwt({ token, user }) {
       if (user) {
-        Object.assign(token, {
-          id: user.id as string,
-          email: user.email as string,
-          role: user.role as Role,
-          username: user.username || null
-        });
+        token.username = user.username || null;
+        token.email = user.email || "";
+        token.role = user.role;
+        token.id = user.id || ""; // Ensure id is not undefined
       }
       return token;
     },
-
-    async session({ session, token }) {
-      if (token) {
-        session.user = {
-          ...session.user,
-          id: token.id,
-          email: token.email,
-          role: token.role,
-          username: token.username || undefined,
-        };
+    session({ session, token }) {
+      if (session?.user) {
+        session.user.id = token.id;
+        session.user.role = token.role;
+        session.user.username = token.username || undefined;
       }
       return session;
     },
+    // Allow signing in with different accounts that have the same email
+    signIn() {
+      return true;
+    }
   },
   events: {
     createUser: async ({ user }) => {
