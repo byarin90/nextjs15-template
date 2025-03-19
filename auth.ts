@@ -41,24 +41,30 @@ export const { handlers, auth, signIn, signOut, unstable_update } = NextAuth({
       clientId: process.env.AUTH0_CLIENT_ID!,
       clientSecret: process.env.AUTH0_CLIENT_SECRET!,
     }),
-    GitHub({ 
-      clientId: process.env.AUTH_GITHUB_ID!, 
+    GitHub({
+      clientId: process.env.AUTH_GITHUB_ID!,
       clientSecret: process.env.AUTH_GITHUB_SECRET!,
       profile(profile) {
         return {
-          id: profile.id.toString(),
           name: profile.name || profile.login,
           email: profile.email,
           image: profile.avatar_url,
           username: profile.login,
           role: "USER" as Role,
-          password: null  // Will be set in the events handlers
         }
       }
     }),
-    Google({ 
-      clientId: process.env.GOOGLE_CLIENT_ID!, 
-      clientSecret: process.env.GOOGLE_CLIENT_SECRET! 
+    Google({
+      clientId: process.env.GOOGLE_CLIENT_ID!,
+      clientSecret: process.env.GOOGLE_CLIENT_SECRET!,
+      profile(profile) {
+        return {
+          name: profile.name,
+          email: profile.email,
+          image: profile.picture,
+          role: "USER" as Role,
+        }
+      }
     }),
   ],
   basePath: "/api/auth",
@@ -104,100 +110,97 @@ export const { handlers, auth, signIn, signOut, unstable_update } = NextAuth({
   },
   events: {
     createUser: async ({ user }) => {
-      console.log("CREATE USER EVENT TRIGGERED:", JSON.stringify(user, null, 2));
-      
+      console.log("CREATE USER EVENT TRIGGERED:", { user });
+
       try {
         // We know the user was created but might not have username or password
         // Let's set defaults
         const salt = await bcrypt.genSalt();
         const hashedPassword = await bcrypt.hash('Aa123456', salt);
-        
+
         // Get the email from account if user email is not available
         const account = await db.account.findFirst({
           where: { userId: user.id }
         });
-        
-        console.log("FOUND ACCOUNT:", JSON.stringify(account, null, 2));
-        
-        // Get user's profile info from provider
+
+        console.log("FOUND ACCOUNT:", { account });
+
         const updatedUser = await db.user.update({
           where: { id: user.id },
           data: {
-            // Use email from account if user email is null
-            email: user.email || "default@example.com",
-            // Use email as username if username is null
+            email: user.email,
             username: user.email || user.username,
-            // Set default password if none exists
             password: hashedPassword
           }
         });
-        
-        console.log("UPDATED USER:", JSON.stringify(updatedUser, null, 2));
+
+        console.log("UPDATED USER:", { updatedUser });
       } catch (error) {
         console.error("ERROR IN CREATE USER EVENT:", error);
         console.error(error);
       }
     },
     linkAccount: async ({ user, account, profile }) => {
-      console.log("LINK ACCOUNT EVENT:", {
-        user: JSON.stringify(user, null, 2),
-        account: JSON.stringify(account, null, 2),
-        profile: JSON.stringify(profile, null, 2)
-      });
-      
+      console.log("LINK ACCOUNT EVENT:", { user, account, profile });
+
       // If we have user email from the provider but not in our database, update it
       if (profile && user.id) {
         try {
           // Get profile email based on provider
-          let email = null;
-          let username = null;
-          
-          // Extract data based on provider
-          if (account?.provider === 'github' && profile) {
-            // GitHub profile has email and login fields
-            email = (profile as any).email;
-            username = (profile as any).login;
-          } else if (account?.provider === 'google' && profile) {
-            // Google profile has email field
-            email = (profile as any).email;
-            username = email; // Use email as username for Google
-          }
-          
+          const email = profile.email;
+          const username = profile.username;
+          const image = profile.image; 
+          const name = profile.name;
+
           // Find existing user
           const existingUser = await db.user.findUnique({
             where: { id: user.id },
             include: { accounts: true }
           });
-          
-          console.log("EXISTING USER FOR LINKING:", JSON.stringify(existingUser, null, 2));
-          
+
+          console.log("EXISTING USER FOR LINKING:", { existingUser });
+
           if (existingUser) {
             // Keep existing username and email if already set
             const updatedData: any = {};
-            
+
             // Only update fields if they are empty
             if (!existingUser.username && username) {
               updatedData.username = username;
+              user.username = username;
             }
-            
+
             if (!existingUser.email && email) {
               updatedData.email = email;
+              user.email = email;
             }
-            
+
+            // Only update name if it's empty
+            if (!existingUser.name && name) {
+              updatedData.name = name;
+              user.name = name;
+            }
+
+            // Only update image if the user doesn't already have one
+            if (!existingUser.image && image) {
+              updatedData.image = image;
+              user.image = image;
+            }
+
             // If password is not set, set a default one
             if (!existingUser.password) {
               const salt = await bcrypt.genSalt();
               updatedData.password = await bcrypt.hash('Aa123456', salt);
             }
-            
+
             // Only update if we have changes to make
             if (Object.keys(updatedData).length > 0) {
               const updated = await db.user.update({
                 where: { id: user.id },
                 data: updatedData
               });
-              
-              console.log("UPDATED USER FROM OAUTH LINK:", JSON.stringify(updated, null, 2));
+
+              console.log("UPDATED USER FROM OAUTH LINK:", { updatedData, updated });
             } else {
               console.log("NO UPDATES NEEDED FOR USER:", user.id);
             }
@@ -208,11 +211,7 @@ export const { handlers, auth, signIn, signOut, unstable_update } = NextAuth({
       }
     },
     signIn: async ({ user, account, profile }) => {
-      console.log("SIGN IN EVENT:", { 
-        user: JSON.stringify(user, null, 2),
-        account: JSON.stringify(account, null, 2),
-        profile: JSON.stringify(profile, null, 2) 
-      });
+      console.log("SIGN IN EVENT:", { user, account, profile });
     }
   },
   experimental: { enableWebAuthn: true },
@@ -231,7 +230,6 @@ declare module "next-auth" {
   interface User {
     role: Role;
     username?: string | null;
-    password?: string | null;
   }
 
   interface Session {
