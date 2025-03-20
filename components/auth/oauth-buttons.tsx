@@ -18,12 +18,12 @@ export function OAuthButtons() {
   }, []);
 
   return (
-    <div className="flex flex-col gap-2 w-full">
+    <div className="flex flex-col gap-2 w-full bg">
       <form action="/api/auth/signin/github" method="post">
         <input type="hidden" name="csrfToken" value={csrfToken || ''} />
         <Button
           type="submit"
-          className="w-full bg-[#24292F] hover:bg-[#24292F]/80 flex items-center justify-center gap-2"
+          className="w-full bg-white hover:bg-gray-100 text-black border border-gray-300 flex items-center justify-center gap-2"
         >
           <Github className="h-5 w-5" />
           <span>התחבר עם גיטהאב</span>

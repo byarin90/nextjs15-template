@@ -76,6 +76,7 @@ export function CredentialForm() {
             value={password}
             onChange={(e: React.ChangeEvent<HTMLInputElement>) => setPassword(e.target.value)}
             placeholder="••••••••"
+            className="px-10"
             required
           />
           <Button
@@ -83,9 +84,9 @@ export function CredentialForm() {
             variant="ghost"
             size="icon"
             onClick={togglePasswordVisibility}
-            className="absolute right-2 top-1/2 transform -translate-y-1/2 h-8 w-8"
+            className="absolute inset-inline-end-2 top-1/2 transform -translate-y-1/2 h-8 w-8 mx-1"
           >
-            {showPassword ? <EyeOffIcon className="h-4 w-4" /> : <EyeIcon className="h-4 w-4" />}
+            {showPassword ? <EyeOffIcon className="h-4 w-4 rig"  /> : <EyeIcon className="h-4 w-4" />}
           </Button>
         </div>
       </div>
