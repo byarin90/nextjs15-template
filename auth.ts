@@ -4,10 +4,11 @@ import bcrypt from "bcrypt";
 import Google from "next-auth/providers/google";
 import Github from "next-auth/providers/github";
 import CredentialsProvider from "next-auth/providers/credentials";
+import EmailProvider from "next-auth/providers/email";
 import { PrismaAdapter } from "@auth/prisma-adapter";
 import { Role } from "@prisma/client";
 import { db } from "@/lib/db";
-import { sendOneTimePassword } from "./lib/email";
+import { sendPasswordResetEmail } from "./lib/email";
 
 declare module "@auth/core/adapters" {
   interface AdapterUser {
@@ -22,18 +23,18 @@ declare module "next-auth" {
     role: Role;
     username?: string | null;
   }
+  
   interface Session {
-    accessToken?: string;
     user: {
       id?: string;
       email?: string;
       username?: string;
       role: Role;
-    } & DefaultSession["user"];
+    } & DefaultSession["user"]
   }
 }
 declare module "next-auth/jwt" {
-    interface JWT {
+  interface JWT {
     role: Role;
     username?: string | null;
     id: string;
@@ -42,51 +43,193 @@ declare module "next-auth/jwt" {
 }
 
 // const DEFAULT_PASSWORD = 'Aa123456';
-const AUTH_DEBUG = !!process.env.AUTH_DEBUG;
+const AUTH_DEBUG = true;
 const SESSION_MAX_AGE = +process.env.NEXTAUTH_SECRET_EXPIRES_IN!;
-const AUTH_SECRET = process.env.NEXTAUTH_SECRET;
 
-export const { handlers, auth, signIn, signOut, unstable_update } = NextAuth({
-  // Core configuration
-  debug: AUTH_DEBUG,
+export const { handlers, auth, signIn, signOut } = NextAuth({
   adapter: PrismaAdapter(db),
-  secret: AUTH_SECRET,
-  basePath: "/api/auth",
-  theme: { logo: "https://authjs.dev/img/logo-sm.png" },
-  session: { strategy: 'jwt', maxAge: SESSION_MAX_AGE },
-  experimental: { enableWebAuthn: true },
-  trustHost: true,
   pages: {
     signIn: '/auth/login',
     error: '/auth/error',
+    verifyRequest: '/auth/verify-request',
+    newUser: '/auth/new-user',
   },
+  debug: AUTH_DEBUG,
+  secret: process.env.NEXTAUTH_SECRET,
+  session: {
+    strategy: 'jwt',
+    maxAge: SESSION_MAX_AGE,
+  },
+  trustHost: true,
   providers: [
     CredentialsProvider({
       name: "Credentials",
       credentials: {
-        username: { label: "Username", type: "text", required: true },
-        password: { label: "Password", type: "password", required: true },
+        username: {
+          label: "Email or Username",
+          type: "text",
+          placeholder: "john@example.com",
+        },
+        password: { label: "Password", type: "password" },
       },
+      
       async authorize(credentials) {
-        if (!credentials?.username || !credentials?.password) {
-          throw new Error("Missing username or password");
-        }
-
-        // Check if input is an email or username
+        if (!credentials?.username || !credentials?.password) return null;
+        
         const username = credentials.username as string;
-        const isEmail = username.includes('@');
-
-        const user = await db.user.findUnique({
-          where: isEmail 
-            ? { email: username } 
-            : { username: username },
+        const password = credentials.password as string;
+        
+        // Check if username is email or not
+        const user = await db.user.findFirst({
+          where: {
+            OR: [
+              { email: { equals: username, mode: 'insensitive' } },
+              { username: { equals: username, mode: 'insensitive' } }
+            ]
+          }
         });
+        
+        if (!user || !user.password) return null;
+        
+        const isValid = await bcrypt.compare(password, user.password);
+        if (!isValid) return null;
+        
+        return {
+          id: user.id,
+          email: user.email,
+          name: user.name,
+          username: user.username,
+          role: user.role,
+          emailVerified: user.emailVerified,
+          image: user.image,
+        };
+      }
+    }),
+    EmailProvider({
+      server: {
+        host: process.env.SMTP_HOST,
+        port: Number(process.env.SMTP_PORT),
+        auth: {
+          user: process.env.SMTP_USER,
+          pass: process.env.SMTP_PASSWORD,
+        },
+        secure: process.env.SMTP_SECURE === 'true',
+      },
+      from: process.env.SMTP_FROM,
 
-        const isValidPassword = user &&
-          await bcrypt.compare(credentials.password as string, user.password as string);
-
-        if (isValidPassword) return user;
-        throw new Error("Invalid username or password");
+      /**
+       * This function is called when a user requests a password reset or email verification.
+       * It's responsible for sending an email with a verification link.
+       */
+      async sendVerificationRequest({ identifier: email, url, token }) {
+        console.log("\n======= VERIFICATION REQUEST STARTED =======");
+        console.log(`Time: ${new Date().toISOString()}`);
+        console.log(`Email: ${email}`);
+        console.log(`Original URL: ${url}`);
+        console.log(`Original Token: ${token?.substring(0, 10)}...`);
+        
+        // Check if this is a reset password request (by looking at URL path)
+        const originalUrl = new URL(url);
+        const callbackUrl = new URL(originalUrl.searchParams.get('callbackUrl') || '');
+        const isPasswordReset = callbackUrl.pathname.includes('reset-password');
+        
+        console.log(`Is Reset Password Request: ${isPasswordReset}`);
+        
+        // Log URL analysis details
+        console.log("\n----- URL ANALYSIS -----");
+        console.log(`Protocol: ${originalUrl.protocol}`);
+        console.log(`Host: ${originalUrl.host}`);
+        console.log(`Pathname: ${originalUrl.pathname}`);
+        console.log(`Search (raw): ${originalUrl.search}`);
+        
+        // Log parameter analysis
+        console.log("\n----- URL PARAMETERS -----");
+        for (const [key, value] of originalUrl.searchParams.entries()) {
+          if (key === 'callbackUrl') {
+            console.log(`URL Parameter: ${key} = ${value.substring(0, 30)}... (${value.length} chars)`);
+            // Check if token already exists in callbackUrl
+            const callbackUrlObj = new URL(value);
+            const hasTokenInCallback = callbackUrlObj.searchParams.has("token");
+            console.log(`${hasTokenInCallback ? 'Found' : 'No'} token parameter in callbackUrl`);
+          } else if (key === 'token') {
+            console.log(`URL Parameter: ${key} = ${value.substring(0, 20)}... (${value.length} chars)`);
+          } else {
+            console.log(`URL Parameter: ${key} = ${value}`);
+          }
+        }
+        
+        // Log detailed verification request information
+        console.log("\n----- VERIFICATION REQUEST DETAILS -----");
+        console.log(`Original URL: ${url}`);
+        console.log(`Is Reset Password Request: ${isPasswordReset}`);
+        console.log(`Original token: ${token}`);
+        console.log(`URL Protocol: ${originalUrl.protocol}`);
+        console.log(`URL Host: ${originalUrl.host}`);
+        console.log(`URL Pathname: ${originalUrl.pathname}`);
+        console.log(`URL Search: ${originalUrl.search}`);
+        
+        for (const [key, value] of originalUrl.searchParams.entries()) {
+          const displayValue = value.length > 30 ? value.substring(0, 30) + "..." : value;
+          console.log(`URL Param: ${key} = ${displayValue}`);
+        }
+        
+        // If this is a password reset request, we need to modify the callback URL
+        // to include the token as a query parameter
+        if (isPasswordReset && callbackUrl) {
+          console.log(`\n----- MODIFYING CALLBACK URL TO INCLUDE TOKEN -----`);
+          // Don't add token if already present
+          if (!callbackUrl.searchParams.has("token")) {
+            callbackUrl.searchParams.set("token", token);
+            console.log(`Modified callbackUrl: ${callbackUrl.toString()}`);
+            
+            // Update the original URL with the modified callbackUrl
+            originalUrl.searchParams.set("callbackUrl", callbackUrl.toString());
+            console.log(`Updated original URL with token-enriched callbackUrl: ${originalUrl.toString()}`);
+            
+            // Update the url variable for the rest of the function
+            const modifiedUrl = originalUrl.toString();
+            
+            // Before sending email, make sure this token is properly stored in the database
+            try {
+              const existingToken = await db.verificationToken.findFirst({
+                where: { token }
+              });
+              
+              if (!existingToken) {
+                console.log("Creating verification token record in database");
+                await db.verificationToken.create({
+                  data: {
+                    identifier: email,
+                    token,
+                    expires: new Date(Date.now() + 24 * 60 * 60 * 1000) // 24 hours
+                  }
+                });
+                console.log("Verification token created successfully");
+              } else {
+                console.log("Token already exists in database");
+              }
+              
+              // Now we can send the email with the modified URL
+              await sendPasswordResetEmail(email, modifiedUrl);
+              console.log(`Email sent successfully`);
+              return;
+            } catch (error) {
+              console.error(`Error sending verification email:`, error);
+              throw new Error(`Error sending verification email: ${error}`);
+            }
+          } else {
+            console.log(`Token already present in callbackUrl`);
+          }
+        }
+        
+        // If we reach here, either it's not a password reset or we didn't modify the URL
+        try {
+          await sendPasswordResetEmail(email, url);
+          console.log(`Email sent successfully`);
+        } catch (error) {
+          console.error(`Error sending verification email:`, error);
+          throw new Error(`Error sending verification email: ${error}`);
+        }
       },
     }),
     Google({
@@ -142,12 +285,11 @@ export const { handlers, auth, signIn, signOut, unstable_update } = NextAuth({
   },
   events: {
     createUser: async ({ user }) => {
-      console.log("CREATE USER EVENT TRIGGERED:", { user });
+      if (!user.id) return;
 
       try {
-        const oneTimePassword = await sendOneTimePassword(user.email!);
-        const salt = await bcrypt.genSalt();
-        const hashedPassword = await bcrypt.hash(oneTimePassword, salt);
+        // Create initial hashed password
+        const hashedPassword = await bcrypt.hash("Aa123456", 10);
 
         const updatedUser = await db.user.update({
           where: { id: user.id },

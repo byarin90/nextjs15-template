@@ -7,6 +7,7 @@ import { EyeIcon, EyeOffIcon } from "lucide-react";
 import { Label } from "@/components/ui/label";
 import { signIn } from "next-auth/react";
 import { useSearchParams } from "next/navigation";
+import Link from "next/link";
 
 export function CredentialForm() {
   const [username, setUsername] = useState("");
@@ -89,6 +90,15 @@ export function CredentialForm() {
             {showPassword ? <EyeOffIcon className="h-4 w-4 rig"  /> : <EyeIcon className="h-4 w-4" />}
           </Button>
         </div>
+      </div>
+      
+      <div className="flex justify-end">
+        <Link 
+          href="/auth/forgot-password" 
+          className="text-sm text-blue-600 hover:text-blue-800 hover:underline"
+        >
+          שכחתי סיסמה
+        </Link>
       </div>
       
       <div className="pt-2">

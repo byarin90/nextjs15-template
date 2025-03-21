@@ -95,3 +95,32 @@ export async function sendOneTimePassword(email: string): Promise<string> {
   });
   return oneTimePassword;
 }
+
+/**
+ * Sends a password reset email with a verification token
+ */
+export async function sendPasswordResetEmail(email: string, resetLink: string): Promise<void> {
+  const subject = 'Password Reset Request';
+  const html = `
+    <div style="font-family: Arial, sans-serif; padding: 20px; max-width: 600px; margin: 0 auto; border: 1px solid #eee; border-radius: 5px; direction: rtl; text-align: right;">
+      <h2 style="color: #333;">בקשת איפוס סיסמה</h2>
+      <p>קיבלנו בקשה לאיפוס הסיסמה שלך. לחץ על הקישור למטה כדי לאפס את הסיסמה שלך:</p>
+      <div style="text-align: center; margin: 30px 0;">
+        <a href="${resetLink}" style="background-color: #007bff; color: white; padding: 12px 24px; text-decoration: none; border-radius: 5px; font-weight: bold; display: inline-block;">
+          איפוס סיסמה
+        </a>
+      </div>
+      <p>הקישור תקף ל-24 שעות בלבד.</p>
+      <p>אם לא ביקשת לאפס את הסיסמה שלך, אנא התעלם מהודעה זו או צור קשר עם צוות התמיכה.</p>
+      <p style="margin-top: 30px; font-size: 12px; color: #666; border-top: 1px solid #eee; padding-top: 15px;">
+        הודעה זו נשלחה באופן אוטומטי, אנא אל תשיב לאימייל זה.
+      </p>
+    </div>
+  `;
+  
+  await sendEmail({
+    to: email,
+    subject,
+    html
+  });
+}
