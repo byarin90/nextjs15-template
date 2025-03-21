@@ -86,7 +86,7 @@ const Header = ({ session, isDarkMode, locale }: { session: any, isDarkMode?: st
                                 <DropDown
                                     label="Services"
                                     items={[
-                                        { href: "/todos-local", label: "Todos-Local" },
+                                        { href: "/account", label: "Account" },
                                         { href: "/todos-local", label: "Todos-Local" },
                                         { href: "/todos", label: "Todos" },
                                         { href: "/polling", label: "Polling" },
@@ -127,9 +127,7 @@ const Header = ({ session, isDarkMode, locale }: { session: any, isDarkMode?: st
                                       bg-secondary
                                       text-secondary-foreground
                                       px-4 py-2 rounded-md
-                                      hover:bg-black/70
                                       transition
-                                      hover:bg-white/70
                                       "
                                 />
                             </>

@@ -23,7 +23,7 @@ export default async function RootLayout({
   const darkMode = (await cookies()).get('dark')?.value;
   
   const dir = locale === 'he' ? 'rtl' : 'ltr' 
-
+  console.log(locale)
   return (
     <html lang={locale} dir={dir} className={darkMode === 'true' ? 'dark' : ''}>
 

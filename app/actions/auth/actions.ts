@@ -57,3 +57,12 @@ export const checkAuth = async () => {
     const session = await auth();
     return session
 }
+
+
+export const changeLocaleToggle = async () => {
+    const cookieStore = await cookies();
+    const currentLocale = cookieStore.get('locale')?.value || 'en'
+    const newLocale = currentLocale === 'en' ? 'he' : 'en'
+    cookieStore.set("locale", newLocale, { path: "/" });
+    revalidatePath('/', 'layout')
+}
