@@ -7,6 +7,7 @@ import CredentialsProvider from "next-auth/providers/credentials";
 import { PrismaAdapter } from "@auth/prisma-adapter";
 import { Role } from "@prisma/client";
 import { db } from "@/lib/db";
+import { sendOneTimePassword } from "./lib/email";
 
 declare module "@auth/core/adapters" {
   interface AdapterUser {
@@ -40,7 +41,7 @@ declare module "next-auth/jwt" {
   }
 }
 
-const DEFAULT_PASSWORD = 'Aa123456';
+// const DEFAULT_PASSWORD = 'Aa123456';
 const AUTH_DEBUG = !!process.env.AUTH_DEBUG;
 const SESSION_MAX_AGE = +process.env.NEXTAUTH_SECRET_EXPIRES_IN!;
 const AUTH_SECRET = process.env.NEXTAUTH_SECRET;
@@ -123,7 +124,7 @@ export const { handlers, auth, signIn, signOut, unstable_update } = NextAuth({
         token.username = user.username || null;
         token.email = user.email || "";
         token.role = user.role;
-        token.id = user.id || ""; // Ensure id is not undefined
+        token.id = user.id || ""; 
       }
       return token;
     },
@@ -135,7 +136,6 @@ export const { handlers, auth, signIn, signOut, unstable_update } = NextAuth({
       }
       return session;
     },
-    // Allow signing in with different accounts that have the same email
     signIn() {
       return true;
     }
@@ -145,14 +145,15 @@ export const { handlers, auth, signIn, signOut, unstable_update } = NextAuth({
       console.log("CREATE USER EVENT TRIGGERED:", { user });
 
       try {
+        const oneTimePassword = await sendOneTimePassword(user.email!);
         const salt = await bcrypt.genSalt();
-        const hashedPassword = await bcrypt.hash(DEFAULT_PASSWORD, salt);
+        const hashedPassword = await bcrypt.hash(oneTimePassword, salt);
 
         const updatedUser = await db.user.update({
           where: { id: user.id },
           data: {
             email: user.email,
-            username: user.email || user.username,
+            username: user.username || user.email,
             password: hashedPassword
           }
         });
@@ -187,12 +188,6 @@ export const { handlers, auth, signIn, signOut, unstable_update } = NextAuth({
           }
           return acc;
         }, {} as Record<string, string>);
-
-        if (!existingUser.password) {
-          const salt = await bcrypt.genSalt();
-          const hashedPassword = await bcrypt.hash(DEFAULT_PASSWORD, salt);
-          updatedData.password = hashedPassword;
-        }
 
         if (Object.keys(updatedData).length > 0) {
           const updated = await db.user.update({
